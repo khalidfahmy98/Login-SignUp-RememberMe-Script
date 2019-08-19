@@ -39,30 +39,40 @@ class user{
         return false;
     }
     public function login($username = null  , $password = null , $remember = false  ){
-        $user = $this->find($username);
-        if($user){
-            if($this->data()->password === hash::make($password,$this->data()->salt)){
-                session::put($this->_sessionName , $this->data()->id);
-                if($remember){
-                    $hash = hash::uniqueHash();
-                    $hashCheck = $this->_db->get('user_session', array('hash' , '=' , $this->data()->id) );
-                    if( !$hashCheck->count() ){
-                        $this->_db->insert('user_session',array(
-                            'user_id' => $this->data()->id,
-                            'hash'    => $hash
-                        ));
-                    }else{  // notice: we are making this if condition for  making sure that if the user exists in table with old hash value then we will set a new hash value , if the hashcheck is false then we will set a new hash value for him
-                        $hash = $hashCheck->first()->hash;
+
+        if ( !$username && !$password && $this->exists() ) { // for automatic login or remember me cookies shitty things  
+            session::put($this->_sessionName , $this->data()->id);
+        }else{
+            $user = $this->find($username);
+            if($user){
+                if($this->data()->password === hash::make($password,$this->data()->salt)){
+                    session::put($this->_sessionName , $this->data()->id);
+                    if($remember){
+                        $hash = hash::uniqueHash();
+                        $hashCheck = $this->_db->get('user_session', array('hash' , '=' , $this->data()->id) );
+                        if( !$hashCheck->count() ){
+                            $this->_db->insert('user_session',array(
+                                'user_id' => $this->data()->id,
+                                'hash'    => $hash
+                            ));
+                        }else{  // notice: we are making this if condition for  making sure that if the user exists in table with old hash value then we will set a new hash value , if the hashcheck is false then we will set a new hash value for him
+                            $hash = $hashCheck->first()->hash;
+                        }
+                        cookie::put($this->_cookieName , $hash , config::get('remember/cookie_expiry'));
                     }
-                    cookie::put($this->_cookieName , $hash , config::get('remember/cookie_expiry'));
+                    return true;
                 }
-                return true;
             }
         }
         return false;
     }
+    public function exists(){
+        return (!empty($this->_data)) ? true: false; // becuase checking wiether we got user data or not 
+    }
     public function logout(){
+        $this->_db->delete('user_session',array('user_id','=',$this->data()->id));
         session::delete($this->_sessionName);
+        cookie::delete($this->_cookieName);
     }
     public function data(){
         return $this->_data;
