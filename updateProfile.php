@@ -2,7 +2,6 @@
     require_once 'core/init.php';
     $user = new user();
     if($user->isLogged()){
-        $userId = session::get(config::get('session/session_name'));
         if( input::exists() ) {
             if(token::check(input::get('token'))){
                 $validate = new validation();
