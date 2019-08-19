@@ -66,6 +66,14 @@ class user{
         }
         return false;
     }
+    public function update($items = array() , $id = null ){
+        if( !$id  && $this->isLogged()){
+            $id = $this->data()->id;
+        }
+        if( !$this->_db->update('users',$id,$items)){
+            throw new Exception ("there was a problame while updating information"); 
+        }
+    }
     public function exists(){
         return (!empty($this->_data)) ? true: false; // becuase checking wiether we got user data or not 
     }

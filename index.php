@@ -16,6 +16,7 @@ if($user->isLogged()){
     <h4>settings</h4>
     <ul>
         <li><a href="logout.php">Logout</a></li>
+        <li><a href="updateProfile.php">update</a></li>
     </ul>
 <?php 
 }else{
