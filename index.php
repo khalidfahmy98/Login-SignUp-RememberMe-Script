@@ -20,6 +20,9 @@ if($user->isLogged()){
         <li><a href="changePassword.php">change password </a></li>
     </ul>
 <?php 
+    if($user->hasPremission('admin')){
+        echo '<h1> YOU ARE AN ADMIN </p>';
+    }
 }else{
     echo ' You need to <a href="login.php">Login</a>  or <a href="register.php">Regsiter</a> ! ';
 }

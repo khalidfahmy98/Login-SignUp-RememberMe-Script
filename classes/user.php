@@ -74,6 +74,17 @@ class user{
             throw new Exception ("there was a problame while updating information"); 
         }
     }
+    public function hasPremission($key){
+        // get user groups 
+        $group = $this->_db->get('groups',array('id','=',$this->data()->grouping));
+        if($group->count()){
+            $permissions = json_decode($group->first()->permissions , true); // true for returning an array , false will return an object 
+            if($permissions[$key] == true ){
+                return true;
+            }
+        }
+        return false;
+    }
     public function exists(){
         return (!empty($this->_data)) ? true: false; // becuase checking wiether we got user data or not 
     }
