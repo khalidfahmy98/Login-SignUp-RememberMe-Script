@@ -14,7 +14,8 @@
             ));
         if($validate->passed()){
             $user = new user();
-            $login = $user->login(input::get('username'),input::get('password'));
+            $remember = (input::get('remember') == 'on') ? true : false ;
+            $login = $user->login(input::get('username'),input::get('password'),$remember);
 
             if ($login){
                 redirect::to('index.php');
@@ -40,7 +41,7 @@
         <input type="password" id="password" name="password" autocomplete="off">
     </div>
     <div class="field">
-        <input type="checkbox" id="remember" name="remember" autocomplete="off">
+        <input type="checkbox" id="remember" name="remember"  autocomplete="off">
         <label for="remember">remember me</label>
     </div>
     <input type="hidden" name="token" value="<?php echo token::generate(); ?>">
