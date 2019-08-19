@@ -5,8 +5,8 @@ Hello ,
 
 This a simple loign / sign up script created with oop php 
 
-some of classes in this project is dynamic and got ability to copy into any another project 
-based . 
+some of classes in this project are dynamic and you can copy each of them into any  project 
+
 
 sql injection in pdo connection is protoected and good .
 
